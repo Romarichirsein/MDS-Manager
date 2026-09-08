@@ -26,7 +26,6 @@ import { StudentFinancialStatementModal } from './components/StudentFinancialSta
 import { StudentDetailModal } from './components/StudentDetailModal';
 import { LoginModal } from './components/LoginModal';
 import { LoginPage } from './components/LoginPage';
-import { AppSplashScreen } from './components/AppSplashScreen';
 import { MDSLogo } from './components/MDSLogo';
 
 import { RefreshCw, AlertCircle, Menu, Search, Plus, DollarSign, LogOut, ExternalLink } from 'lucide-react';
@@ -61,7 +60,6 @@ function getPathFromTab(tab: NavigationTab): string {
 
 function MainApp() {
   const { user, loading: authLoading, logout, canManageStudents, canRecordPayments, isAdmin } = useAuth();
-  const [showSplash, setShowSplash] = useState(true);
 
   // Navigation par URL
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -116,20 +114,20 @@ function MainApp() {
   const [payments, setPayments] = useState<Paiement[]>([]);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [settings, setSettings] = useState<InstitutionSettings>({
-    nomEtablissement: 'MDS Manager (Main du Secours)',
-    anneeEnCours: '2024-2025',
+    nomEtablissement: 'Centre Médical La Main du Secours',
+    anneeEnCours: '2025-2026',
     devise: 'FCFA',
-    mentionBasPageRecu: 'Reçu officiel certifié conforme par la Caisse MDS Manager (Main du Secours). Conservez ce document pour tout recours.',
+    mentionBasPageRecu: 'Reçu officiel certifié conforme par la Caisse du Centre Médical La Main du Secours. Conservez ce document pour tout recours.',
     telephone: '+225 27 22 45 80 00',
     email: 'lamaindusecour@gmail.com',
-    adresse: 'Avenue Centrale MDS, Campus Principal',
+    adresse: 'Abidjan, Côte d Ivoire',
     filières: [
-      { nom: 'Génie Logiciel & Informatique', fraisDefaut: 1200000 },
-      { nom: 'Management & Gestion des Entreprises', fraisDefaut: 950000 },
-      { nom: 'Comptabilité, Contrôle & Audit', fraisDefaut: 1000000 },
-      { nom: 'Droit des Affaires & Fiscalité', fraisDefaut: 900000 },
-      { nom: 'Marketing Digital & Communication', fraisDefaut: 850000 },
-      { nom: 'Cybersécurité & Réseaux Télécoms', fraisDefaut: 1350000 },
+      { nom: 'Soins Infirmiers & Obstétricaux', fraisDefaut: 650000 },
+      { nom: 'Sage-Femme / Maïeutique', fraisDefaut: 700000 },
+      { nom: 'Biologie Médicale & Analyses', fraisDefaut: 800000 },
+      { nom: 'Pharmacie & Délégué Médical', fraisDefaut: 750000 },
+      { nom: 'Secrétariat Médical & Gestion Hospitalière', fraisDefaut: 600000 },
+      { nom: 'Kinésithérapie & Rééducation', fraisDefaut: 850000 },
     ],
   });
   const [logs, setLogs] = useState<ActivityLog[]>([]);
@@ -292,21 +290,8 @@ function MainApp() {
     settings: "Paramètres de l'Établissement",
   };
 
-  if (showSplash || authLoading) {
-    return (
-      <AppSplashScreen
-        minDurationMs={1300}
-        onLoaded={() => {
-          if (!authLoading) {
-            setShowSplash(false);
-          }
-        }}
-      />
-    );
-  }
-
-  // Si non connecté ou sur la route /login, afficher la page de connexion
-  if (!user || currentPath === '/login') {
+  // Si en cours de vérification de session ou non connecté ou sur la route /login, afficher la page de connexion
+  if (authLoading || !user || currentPath === '/login') {
     return (
       <LoginPage
         onLoginSuccess={() => {

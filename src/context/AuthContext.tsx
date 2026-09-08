@@ -23,24 +23,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('edufinance_token'));
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function checkAuth() {
-      const storedToken = localStorage.getItem('mds_token') || localStorage.getItem('edufinance_token');
+      // Nettoyer les anciens tokens résiduels de démo
+      localStorage.removeItem('edufinance_token');
+      
+      const storedToken = sessionStorage.getItem('mds_token');
       if (storedToken) {
         try {
           const res = await api.getMe();
           setUser(res.user);
           setToken(storedToken);
         } catch {
+          sessionStorage.removeItem('mds_token');
           localStorage.removeItem('mds_token');
-          localStorage.removeItem('edufinance_token');
           setUser(null);
           setToken(null);
         }
       } else {
+        // Au lancement à froid, on atterrit impérativement sur /login
         setUser(null);
         setToken(null);
       }
@@ -51,12 +55,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, mdp: string) => {
     const res = await api.login(email, mdp);
+    sessionStorage.setItem('mds_token', res.token);
     localStorage.setItem('mds_token', res.token);
     setUser(res.user);
     setToken(res.token);
   };
 
   const logout = () => {
+    sessionStorage.removeItem('mds_token');
     localStorage.removeItem('mds_token');
     localStorage.removeItem('edufinance_token');
     setUser(null);

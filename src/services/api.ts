@@ -10,7 +10,7 @@ import {
 const API_BASE = '/api';
 
 function getHeaders(): HeadersInit {
-  const token = localStorage.getItem('mds_token') || localStorage.getItem('edufinance_token');
+  const token = sessionStorage.getItem('mds_token') || localStorage.getItem('mds_token');
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
