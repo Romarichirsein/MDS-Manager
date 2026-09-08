@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <rect width="128" height="128" rx="28" fill="#1B365D" />
+  <!-- Anneau rouge -->
+  <circle cx="64" cy="64" r="42" fill="none" stroke="#E52320" stroke-width="11" />
+  
+  <!-- Caducée cyan -->
+  <g id="caducee-icon" fill="#00B0FF" stroke="#00B0FF">
+    <!-- Tige -->
+    <line x1="64" y1="28" x2="64" y2="100" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="64" cy="27" r="5" fill="#00B0FF"/>
+    
+    <!-- Ailes -->
+    <path d="M 62 39 C 50 30, 26 31, 12 44 C 25 53, 40 50, 52 46 C 37 54, 25 60, 20 67 C 32 66, 46 61, 62 53 Z" stroke-width="1" />
+    <path d="M 66 39 C 78 30, 102 31, 116 44 C 103 53, 88 50, 76 46 C 91 54, 103 60, 108 67 C 96 66, 82 61, 66 53 Z" stroke-width="1" />
+
+    <!-- Serpents -->
+    <path d="M 58 45 C 52 51, 52 59, 64 65 C 76 71, 76 79, 64 85 C 52 91, 52 96, 64 100" fill="none" stroke="#00B0FF" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 70 45 C 76 51, 76 59, 64 65 C 52 71, 52 79, 64 85 C 76 91, 76 96, 64 100" fill="none" stroke="#00B0FF" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

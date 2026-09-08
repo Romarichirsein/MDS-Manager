@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function() {
+        try {
+          var _origFetch = (typeof window !== 'undefined' && window.fetch) ||
+                           (typeof globalThis !== 'undefined' && globalThis.fetch);
+          if (_origFetch) {
+            var activeFetch = function() {
+              return _origFetch.apply(this, arguments);
+            };
+            var fetchDesc = {
+              get: function() { return activeFetch; },
+              set: function(fn) {
+                if (typeof fn === 'function') {
+                  activeFetch = fn;
+                }
+              },
+              configurable: true,
+              enumerable: true
+            };
+            try { Object.defineProperty(window, 'fetch', fetchDesc); } catch(e) {}
+            if (typeof globalThis !== 'undefined' && globalThis !== window) {
+              try { Object.defineProperty(globalThis, 'fetch', fetchDesc); } catch(e) {}
+            }
+            var proto = Object.getPrototypeOf(window);
+            while (proto && proto !== Object.prototype) {
+              try {
+                var d = Object.getOwnPropertyDescriptor(proto, 'fetch');
+                if (d && (d.get || !d.writable)) {
+                  Object.defineProperty(proto, 'fetch', fetchDesc);
+                }
+              } catch(e) {}
+              proto = Object.getPrototypeOf(proto);
+            }
+          }
+        } catch (err) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo-mds.svg" />
+    <title>MDS Manager (main du secour)</title>
+    <meta name="description" content="Plateforme intégrée de gestion scolaire, administrative, suivi des paiements et de la solvabilité - MDS Manager (Main du Secours)." />
+    <meta property="og:title" content="MDS Manager (main du secour)" />
+    <meta property="og:description" content="Plateforme intégrée de gestion scolaire, administrative, suivi des paiements et de la solvabilité - MDS Manager (Main du Secours)." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

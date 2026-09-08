@@ -1,0 +1,6 @@
+{
+  "name": "MDS Manager (main du secour)",
+  "description": "Plateforme intégrée de gestion scolaire, administrative, suivi des paiements et de la solvabilité - MDS Manager (Main du Secours).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
