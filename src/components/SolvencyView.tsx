@@ -336,7 +336,14 @@ export const SolvencyView: React.FC<SolvencyViewProps> = ({
 
       {/* Table des Étudiants selon Solvabilité */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        {currentList.length === 0 ? (
+        {students.length === 0 ? (
+          <div className="p-12 text-center">
+            <p className="text-sm font-bold text-slate-800">Aucune donnée de scolarité à analyser</p>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              L état de solvabilité sera automatiquement généré en temps réel dès l inscription des premiers étudiants.
+            </p>
+          </div>
+        ) : currentList.length === 0 ? (
           <div className="p-12 text-center text-slate-500 text-xs">
             Aucun étudiant dans cette catégorie pour le moment.
           </div>

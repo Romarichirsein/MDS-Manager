@@ -1040,11 +1040,17 @@ app.get('/api/sanity/config', (req, res) => {
   });
 });
 
+const DEFAULT_SANITY_PROJECT_ID = 'hxlkt1pm';
+const DEFAULT_SANITY_DATASET = 'production';
+const DEFAULT_SANITY_API_VERSION = '2024-03-01';
+const DEFAULT_SANITY_API_TOKEN =
+  'skcKTClkBIWP0Day5hWh9xjB83GN9TJF0OFfEoDxjCqWQXWRAyqYIj4EXVEGoogKzTzzdsueGZVAjDvGKVjVTGt6A3nYp8OqHRBn1UWiLbF16KWRiyiKXwcgAmiXpeVA6NchGYcn5NAkyyDFIt0at80zyP9drsx2w71tejPQ7hEaROQxoBXD';
+
 app.post('/api/sanity/sync-all', async (req, res) => {
-  const targetProject = process.env.SANITY_PROJECT_ID || req.body.projectId;
-  const targetDataset = process.env.SANITY_DATASET || req.body.dataset || 'production';
-  const targetVersion = process.env.SANITY_API_VERSION || req.body.apiVersion || '2024-03-01';
-  const targetToken = process.env.SANITY_API_TOKEN || req.body.token;
+  const targetProject = process.env.SANITY_PROJECT_ID || req.body.projectId || DEFAULT_SANITY_PROJECT_ID;
+  const targetDataset = process.env.SANITY_DATASET || req.body.dataset || DEFAULT_SANITY_DATASET;
+  const targetVersion = process.env.SANITY_API_VERSION || req.body.apiVersion || DEFAULT_SANITY_API_VERSION;
+  const targetToken = process.env.SANITY_API_TOKEN || req.body.token || DEFAULT_SANITY_API_TOKEN;
 
   if (!targetProject || !targetToken) {
     return res.status(400).json({
@@ -1162,10 +1168,10 @@ app.post('/api/sanity/sync-all', async (req, res) => {
 
 app.post('/api/sanity/test', async (req, res) => {
   const { projectId, dataset, apiVersion, token } = req.body;
-  const targetProject = projectId || process.env.SANITY_PROJECT_ID;
-  const targetDataset = dataset || process.env.SANITY_DATASET || 'production';
-  const targetVersion = apiVersion || process.env.SANITY_API_VERSION || '2024-03-01';
-  const targetToken = token || process.env.SANITY_API_TOKEN;
+  const targetProject = projectId || process.env.SANITY_PROJECT_ID || DEFAULT_SANITY_PROJECT_ID;
+  const targetDataset = dataset || process.env.SANITY_DATASET || DEFAULT_SANITY_DATASET;
+  const targetVersion = apiVersion || process.env.SANITY_API_VERSION || DEFAULT_SANITY_API_VERSION;
+  const targetToken = token || process.env.SANITY_API_TOKEN || DEFAULT_SANITY_API_TOKEN;
 
   if (!targetProject) {
     return res.status(400).json({

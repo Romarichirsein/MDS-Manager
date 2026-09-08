@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { MDSLogo } from './MDSLogo';
 import {
-  GraduationCap,
   Lock,
   User as UserIcon,
-  ShieldCheck,
-  CheckCircle,
   AlertCircle,
-  ChevronRight,
-  Sparkles,
+  X,
 } from 'lucide-react';
 
 interface LoginModalProps {
@@ -17,9 +14,9 @@ interface LoginModalProps {
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const { login, user } = useAuth();
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const { login } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,20 +25,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      await login(username, password);
-      onClose();
-    } catch (err: any) {
-      setError(err.message || 'Identifiants incorrects');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleQuickLogin = async (u: string, p: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await login(u, p);
+      await login(username.trim(), password);
       onClose();
     } catch (err: any) {
       setError(err.message || 'Identifiants incorrects');
@@ -56,13 +40,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
       <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
-        <div className="p-6 bg-slate-900 text-white text-center">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center mx-auto mb-3 text-white shadow-lg">
-            <GraduationCap className="w-7 h-7" />
+        <div className="p-6 bg-slate-900 text-white text-center relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <div className="w-12 h-12 rounded-2xl bg-[#1B365D] ring-1 ring-cyan-500/30 flex items-center justify-center mx-auto mb-3 text-white shadow-lg">
+            <MDSLogo variant="emblem" size="sm" />
           </div>
-          <h2 className="text-lg font-bold">Portail d Authentification Sécurisé</h2>
+          <h2 className="text-lg font-bold">MDS Manager</h2>
           <p className="text-xs text-slate-300 mt-1">
-            EduFinance • Gestion Administrative & Recouvrement
+            Centre Médical La Main du Secours
           </p>
         </div>
 
@@ -78,16 +68,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Identifiant / Nom d utilisateur
+                Identifiant / Email
               </label>
               <div className="relative">
                 <UserIcon className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
                 <input
                   id="login-username-input"
                   type="text"
+                  placeholder="nom.utilisateur@domaine.com"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
                   required
                 />
               </div>
@@ -102,9 +93,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 <input
                   id="login-password-input"
                   type="password"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
                   required
                 />
               </div>
@@ -114,27 +106,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               id="submit-login-btn"
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer"
             >
               {loading ? 'Connexion en cours...' : 'Se Connecter'}
             </button>
           </form>
-
-          {/* Quick profile switchers for test & evaluation */}
-          <div className="pt-4 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('lamaindusecour@gmail.com', 'qlac485!')}
-              className="w-full p-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl text-center transition-colors cursor-pointer"
-            >
-              <span className="block text-xs font-bold text-indigo-900">
-                Compte Administrateur Unique
-              </span>
-              <span className="block text-[11px] text-indigo-700 font-mono mt-0.5">
-                lamaindusecour@gmail.com
-              </span>
-            </button>
-          </div>
         </div>
       </div>
     </div>

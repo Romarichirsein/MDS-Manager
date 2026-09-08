@@ -11,11 +11,23 @@ export interface SanityConfig {
 
 const STORAGE_KEY = 'mds_sanity_config';
 
+export const DEFAULT_SANITY_PROJECT_ID = 'hxlkt1pm';
+export const DEFAULT_SANITY_DATASET = 'production';
+export const DEFAULT_SANITY_API_VERSION = '2024-03-01';
+export const DEFAULT_SANITY_API_TOKEN =
+  'skcKTClkBIWP0Day5hWh9xjB83GN9TJF0OFfEoDxjCqWQXWRAyqYIj4EXVEGoogKzTzzdsueGZVAjDvGKVjVTGt6A3nYp8OqHRBn1UWiLbF16KWRiyiKXwcgAmiXpeVA6NchGYcn5NAkyyDFIt0at80zyP9drsx2w71tejPQ7hEaROQxoBXD';
+
 export function getStoredSanityConfig(): SanityConfig {
   const local = localStorage.getItem(STORAGE_KEY);
   if (local) {
     try {
-      return JSON.parse(local);
+      const parsed = JSON.parse(local);
+      if (parsed && parsed.projectId) {
+        return {
+          ...parsed,
+          token: parsed.token || DEFAULT_SANITY_API_TOKEN,
+        };
+      }
     } catch {
       // ignore
     }
@@ -24,10 +36,10 @@ export function getStoredSanityConfig(): SanityConfig {
   const metaEnv = (import.meta as any).env || {};
 
   return {
-    projectId: metaEnv.VITE_SANITY_PROJECT_ID || '',
-    dataset: metaEnv.VITE_SANITY_DATASET || 'production',
-    apiVersion: metaEnv.VITE_SANITY_API_VERSION || '2024-03-01',
-    token: metaEnv.VITE_SANITY_API_TOKEN || '',
+    projectId: metaEnv.VITE_SANITY_PROJECT_ID || DEFAULT_SANITY_PROJECT_ID,
+    dataset: metaEnv.VITE_SANITY_DATASET || DEFAULT_SANITY_DATASET,
+    apiVersion: metaEnv.VITE_SANITY_API_VERSION || DEFAULT_SANITY_API_VERSION,
+    token: metaEnv.VITE_SANITY_API_TOKEN || DEFAULT_SANITY_API_TOKEN,
     useCdn: false,
   };
 }

@@ -32,13 +32,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     preselectedStudent?.id || ''
   );
   const [studentSearch, setStudentSearch] = useState('');
-  const [montant, setMontant] = useState<number>(100000);
+  const [montant, setMontant] = useState<number>(0);
   const [datePaiement, setDatePaiement] = useState(
     new Date().toISOString().slice(0, 10)
   );
   const [modePaiement, setModePaiement] = useState<ModePaiement>('Espèces');
   const [referencePaiement, setReferencePaiement] = useState('');
-  const [motif, setMotif] = useState('Frais de scolarité - Tranche');
+  const [motif, setMotif] = useState('Frais de scolarité');
   const [remarques, setRemarques] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -48,11 +48,11 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     if (preselectedStudent) {
       setSelectedStudentId(preselectedStudent.id);
       const reste = preselectedStudent.resteAPayer ?? 0;
-      setMontant(reste > 0 ? Math.min(reste, 200000) : 0);
-      setMotif(reste <= 200000 && reste > 0 ? 'Frais de scolarité - Solde final' : 'Frais de scolarité - Versement');
-      setReferencePaiement(`REF-${Date.now().toString(36).toUpperCase()}`);
+      setMontant(reste > 0 ? reste : 0);
+      setMotif(reste > 0 ? 'Frais de scolarité - Versement' : 'Frais de scolarité');
+      setReferencePaiement('');
     } else {
-      setReferencePaiement(`REF-${Date.now().toString(36).toUpperCase()}`);
+      setReferencePaiement('');
     }
   }, [preselectedStudent]);
 

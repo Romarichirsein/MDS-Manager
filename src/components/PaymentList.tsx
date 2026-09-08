@@ -225,7 +225,17 @@ export const PaymentList: React.FC<PaymentListProps> = ({
 
       {/* Table */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        {filteredPayments.length === 0 ? (
+        {payments.length === 0 ? (
+          <div className="p-12 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3">
+              <Receipt className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-bold text-slate-800">Aucun versement enregistré pour le moment</p>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              La caisse est initialisée et prête. Les versements et reçus officiels apparaîtront ici dès les premiers encaissements.
+            </p>
+          </div>
+        ) : filteredPayments.length === 0 ? (
           <div className="p-12 text-center text-slate-500 text-xs">
             Aucun paiement ne correspond aux critères sélectionnés.
           </div>

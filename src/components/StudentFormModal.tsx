@@ -45,23 +45,23 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [sexe, setSexe] = useState<'M' | 'F'>('M');
-  const [dateNaissance, setDateNaissance] = useState('2003-01-01');
+  const [dateNaissance, setDateNaissance] = useState('');
   const [telephone, setTelephone] = useState('');
   const [email, setEmail] = useState('');
   const [adresse, setAdresse] = useState('');
 
   // Données académiques
-  const [formation, setFormation] = useState(settings.filières[0]?.nom || '');
+  const [formation, setFormation] = useState(settings.filières[0]?.nom || 'Soins Infirmiers & Obstétricaux');
   const [niveau, setNiveau] = useState(NIVEAUX[0]);
   const [anneeAcademique, setAnneeAcademique] = useState(settings.anneeEnCours);
   const [fraisFormation, setFraisFormation] = useState<number>(
-    settings.filières[0]?.fraisParDefaut || 1000000
+    (settings.filières[0] as any)?.fraisDefaut || (settings.filières[0] as any)?.fraisParDefaut || 650000
   );
   const [remarques, setRemarques] = useState('');
 
   // Premier acompte optionnel (pour nouvelle inscription)
   const [enregistrerAcompte, setEnregistrerAcompte] = useState(false);
-  const [montantAcompte, setMontantAcompte] = useState<number>(300000);
+  const [montantAcompte, setMontantAcompte] = useState<number>(0);
   const [modeAcompte, setModeAcompte] = useState<ModePaiement>('Espèces');
   const [refAcompte, setRefAcompte] = useState('');
 
@@ -74,7 +74,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
       setNom(activeStudent.nom);
       setPrenom(activeStudent.prenom);
       setSexe(activeStudent.sexe);
-      setDateNaissance(activeStudent.dateNaissance || '2003-01-01');
+      setDateNaissance(activeStudent.dateNaissance || '');
       setTelephone(activeStudent.telephone || '');
       setEmail(activeStudent.email || '');
       setAdresse(activeStudent.adresse || '');
@@ -92,20 +92,20 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
       setNom('');
       setPrenom('');
       setSexe('M');
-      setDateNaissance('2004-05-15');
+      setDateNaissance('');
       setTelephone('');
       setEmail('');
       setAdresse('');
-      const defaultFiliere = settings.filières[0]?.nom || 'Génie Logiciel & Informatique';
+      const defaultFiliere = settings.filières[0]?.nom || 'Soins Infirmiers & Obstétricaux';
       setFormation(defaultFiliere);
       setNiveau(NIVEAUX[0]);
       setAnneeAcademique(settings.anneeEnCours);
-      const defaultFee = settings.filières[0]?.fraisParDefaut || 1200000;
+      const defaultFee = (settings.filières[0] as any)?.fraisDefaut || (settings.filières[0] as any)?.fraisParDefaut || 650000;
       setFraisFormation(defaultFee);
       setRemarques('');
       setEnregistrerAcompte(false);
-      setMontantAcompte(Math.round(defaultFee * 0.4)); // Suggestion 40% acompte
-      setRefAcompte(`AC-INS-${Date.now().toString(36).toUpperCase()}`);
+      setMontantAcompte(0);
+      setRefAcompte('');
     }
   }, [student, settings]);
 
@@ -115,8 +115,8 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
     if (!isEditing) {
       const match = settings.filières.find((f) => f.nom === newFiliere);
       if (match) {
-        setFraisFormation(match.fraisParDefaut);
-        setMontantAcompte(Math.round(match.fraisParDefaut * 0.4));
+        const fee = (match as any).fraisDefaut || (match as any).fraisParDefaut || 650000;
+        setFraisFormation(fee);
       }
     }
   };

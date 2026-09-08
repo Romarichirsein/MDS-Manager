@@ -15,6 +15,8 @@ import {
   AlertTriangle,
   Printer,
   ChevronDown,
+  Users,
+  Plus,
 } from 'lucide-react';
 
 interface StudentListProps {
@@ -305,7 +307,27 @@ export const StudentList: React.FC<StudentListProps> = ({
 
       {/* Main Student Data Table */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        {filteredStudents.length === 0 ? (
+        {students.length === 0 ? (
+          <div className="p-12 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3">
+              <Users className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-bold text-slate-800">Aucun étudiant inscrit pour le moment</p>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              Le registre académique est vierge. Cliquez sur le bouton ci-dessous pour enregistrer le premier dossier.
+            </p>
+            {canManageStudents && (
+              <button
+                id="empty-state-new-student-btn"
+                onClick={onOpenNewStudent}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                Inscrire un premier étudiant
+              </button>
+            )}
+          </div>
+        ) : filteredStudents.length === 0 ? (
           <div className="p-12 text-center">
             <Filter className="w-8 h-8 text-slate-300 mx-auto mb-2" />
             <p className="text-sm font-bold text-slate-700">Aucun étudiant ne correspond aux critères</p>

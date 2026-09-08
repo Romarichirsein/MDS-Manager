@@ -9,11 +9,6 @@ import {
   EyeOff,
   AlertCircle,
   ArrowRight,
-  Sparkles,
-  School,
-  CheckCircle2,
-  KeyRound,
-  UserCheck,
 } from 'lucide-react';
 
 interface LoginPageProps {
@@ -22,8 +17,8 @@ interface LoginPageProps {
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const { login } = useAuth();
-  const [username, setUsername] = useState('lamaindusecour@gmail.com');
-  const [password, setPassword] = useState('qlac485!');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,27 +32,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       onLoginSuccess();
     } catch (err: any) {
       setError(err.message || 'Identifiants invalides. Veuillez vérifier vos accès.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleQuickFill = (u: string, p: string) => {
-    setUsername(u);
-    setPassword(p);
-    setError(null);
-  };
-
-  const handleDirectLogin = async (u: string, p: string) => {
-    setUsername(u);
-    setPassword(p);
-    setLoading(true);
-    setError(null);
-    try {
-      await login(u, p);
-      onLoginSuccess();
-    } catch (err: any) {
-      setError(err.message || 'Identifiants invalides.');
     } finally {
       setLoading(false);
     }
@@ -126,7 +100,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="lamaindusecour@gmail.com"
+                    placeholder="nom.utilisateur@domaine.com"
                     className="w-full pl-10 pr-4 py-2.5 bg-slate-50 text-slate-900 border border-slate-300 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                   />
                 </div>
@@ -195,40 +169,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 </button>
               </div>
             </form>
-
-            {/* Credentials Card for Convenience & Quick Access */}
-            <div className="mt-6 pt-5 border-t border-slate-100">
-              <div className="p-4 bg-indigo-50/70 border border-indigo-150 rounded-2xl">
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-950">
-                    <KeyRound className="w-3.5 h-3.5 text-indigo-600" />
-                    <span>Compte Administrateur Unique</span>
-                  </div>
-                  <span className="px-2.5 py-0.5 bg-indigo-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wider">
-                    ADMIN UNIQUE
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 gap-1.5 text-[11px] text-slate-700 font-mono bg-white p-2.5 rounded-xl border border-indigo-100">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500 font-sans">Identifiant :</span>
-                    <span className="font-bold text-slate-900">lamaindusecour@gmail.com</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-500 font-sans">Mot de passe :</span>
-                    <span className="font-bold text-slate-900">qlac485!</span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  id="quick-login-mds-admin"
-                  onClick={() => handleDirectLogin('lamaindusecour@gmail.com', 'qlac485!')}
-                  className="mt-3 w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Connexion directe Administrateur</span>
-                </button>
-              </div>
-            </div>
           </div>
 
           <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-200/80 text-center text-[11px] text-slate-500 flex items-center justify-center gap-2">
