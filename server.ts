@@ -29,7 +29,9 @@ const PORT = 3000;
 
 app.use(express.json());
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+const ORIGINAL_DATA_DIR = path.join(process.cwd(), 'data');
+const ORIGINAL_DB_FILE = path.join(ORIGINAL_DATA_DIR, 'database.json');
+const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : ORIGINAL_DATA_DIR;
 const DB_FILE = path.join(DATA_DIR, 'database.json');
 
 // Interface pour la structure de stockage
@@ -165,6 +167,13 @@ function loadDatabase(): DBData {
   try {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (process.env.VERCEL && !fs.existsSync(DB_FILE) && fs.existsSync(ORIGINAL_DB_FILE)) {
+      try {
+        fs.copyFileSync(ORIGINAL_DB_FILE, DB_FILE);
+      } catch {
+        // ignore
+      }
     }
     if (fs.existsSync(DB_FILE)) {
       const content = fs.readFileSync(DB_FILE, 'utf-8');
@@ -1233,4 +1242,9 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
+export { app };
