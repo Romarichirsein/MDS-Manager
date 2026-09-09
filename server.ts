@@ -47,9 +47,16 @@ app.use((req, res, next) => {
   next();
 });
 
+const isServerless = Boolean(
+  process.env.VERCEL ||
+  process.env.VERCEL_ENV ||
+  process.env.NOW_REGION ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.LAMBDA_TASK_ROOT
+);
 const ORIGINAL_DATA_DIR = path.join(process.cwd(), 'data');
 const ORIGINAL_DB_FILE = path.join(ORIGINAL_DATA_DIR, 'database.json');
-const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : ORIGINAL_DATA_DIR;
+const DATA_DIR = isServerless ? path.join('/tmp', 'data') : ORIGINAL_DATA_DIR;
 const DB_FILE = path.join(DATA_DIR, 'database.json');
 
 // Interface pour la structure de stockage
@@ -1266,7 +1273,14 @@ async function startServer() {
   });
 }
 
-if (!process.env.VERCEL) {
+// Ne démarrer le serveur de développement que s'il s'agit de l'exécution directe
+const isMain = process.argv[1] && (
+  process.argv[1].endsWith('server.ts') || 
+  process.argv[1].endsWith('server.cjs') || 
+  process.argv[1].endsWith('server.js')
+);
+
+if (isMain && !process.env.VERCEL && !process.env.VERCEL_ENV && !process.env.NOW_REGION && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
   startServer();
 }
 

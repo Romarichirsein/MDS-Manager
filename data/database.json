@@ -12,7 +12,20 @@
   ],
   "students": [],
   "payments": [],
-  "logs": [],
+  "logs": [
+    {
+      "id": "log-1788974080114-d81b",
+      "timestamp": "2026-09-09T17:14:40.114Z",
+      "userId": "u-mds",
+      "userName": "Administrateur MDS",
+      "userRole": "ADMIN",
+      "action": "INSCRIPTION_ETUDIANT",
+      "actionType": "INSCRIPTION",
+      "details": "Inscription de l étudiant KOUASSI Aya Marie (Matricule: ETU-2026-001)",
+      "entityId": "stu-1788974080113",
+      "entityType": "ETUDIANT"
+    }
+  ],
   "settings": {
     "nomEtablissement": "Centre Médical La Main du Secours",
     "slogan": "Service d aide, de soins et de formation médicale d excellence",
@@ -49,5 +62,6 @@
         "fraisParDefaut": 850000
       }
     ]
-  }
+  },
+  "auditLogs": []
 }
