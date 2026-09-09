@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { createServer as createViteServer } from 'vite';
 
 // Load .env variables if present
 const envPath = path.join(process.cwd(), '.env');
@@ -28,6 +27,25 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+// CORS & Options Handling (Crucial pour Vercel & Environnements Cloud)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// Normalisation des URLs pour Vercel Serverless (si /api est tronqué par le rewrite Vercel)
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && !req.url.startsWith('/_')) {
+    req.url = `/api${req.url}`;
+  }
+  next();
+});
 
 const ORIGINAL_DATA_DIR = path.join(process.cwd(), 'data');
 const ORIGINAL_DB_FILE = path.join(ORIGINAL_DATA_DIR, 'database.json');
@@ -1223,12 +1241,18 @@ app.post('/api/sanity/test', async (req, res) => {
 // VITE MIDDLEWARE & STATIC SERVING
 // ==========================================
 async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    try {
+      const viteModule = 'vite';
+      const { createServer: createViteServer } = await import(viteModule);
+      const vite = await createViteServer({
+        server: { middlewareMode: true },
+        appType: 'spa',
+      });
+      app.use(vite.middlewares);
+    } catch (err) {
+      console.warn('Vite dev middleware not loaded:', err);
+    }
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
